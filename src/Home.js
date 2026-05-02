@@ -1,13 +1,50 @@
 import { Component } from "react";
+import { Link, Outlet } from "react-router-dom";
+import "./App.css";
+
 class Home extends Component {
-    render() {
-        return (
-            <div>
-                <h1>Home</h1>
-                <p>Ini adalah halaman page</p>
-            </div>
-        )
+
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/login";
     }
+  }
+
+  handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  render() {
+    return (
+      <div>
+
+        {/* 🔥 NAVBAR */}
+        <div className="navbar">
+          <h3 className="logo">My App</h3>
+
+          <div className="nav-links">
+            <Link to="user">User</Link>
+            <Link to="currencies">Currencies</Link>
+            <Link to="categories">Categories</Link>
+            <Link to="wallets">Wallets</Link>
+            <Link to="transactions">Transactions</Link>
+          </div>
+
+          <button className="logout-btn" onClick={this.handleLogout}>
+            Logout
+          </button>
+        </div>
+
+        {/* 🔥 KONTEN */}
+        <div className="content">
+          <Outlet />
+        </div>
+
+      </div>
+    );
+  }
 }
 
 export default Home;

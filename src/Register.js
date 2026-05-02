@@ -1,5 +1,6 @@
 import { Component } from "react";
 import axios from "axios";
+import "./App.css";
 
 class Register extends Component {
 
@@ -15,7 +16,10 @@ class Register extends Component {
     };
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/auth/register", data);
+      await axios.post(
+        "http://127.0.0.1:8000/api/auth/register",
+        data
+      );
 
       alert("Register berhasil, silakan login");
 
@@ -29,43 +33,44 @@ class Register extends Component {
 
   render() {
     return (
-      <div className="container mt-5">
-        <h2 className="text-primary">Register</h2>
+      <div className="auth-container">
+        <div className="card">
 
-        <form
-          className="p-4 bg-light rounded shadow"
-          onSubmit={this.handleSubmit}
-        >
-          <input
-            className="form-control mb-3"
-            type="text"
-            name="name"
-            placeholder="Name"
-          />
+          <h2 className="title">Register</h2>
 
-          <input
-            className="form-control mb-3"
-            type="email"
-            name="email"
-            placeholder="Email"
-          />
+         <form onSubmit={this.handleSubmit}>
+            
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className="input"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="input"
+            />
 
-          <input
-            className="form-control mb-3"
-            type="password"
-            name="password"
-            placeholder="Password"
-          />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="input"
+            />
 
-          {/* 🔥 tetap style sama, tapi jadi button */}
-          <button type="submit" className="btn btn-success m-2">
-            Register
-          </button>
+            <button type="submit" className="btn">
+              Register
+            </button>
 
-          <a href="login" className="btn btn-success m-2">
-            Login
-          </a>
-        </form>
+          </form>
+
+          <p className="link">
+            Belum punya akun? <a href="/login">Login</a>
+          </p>
+
+        </div>
       </div>
     );
   }

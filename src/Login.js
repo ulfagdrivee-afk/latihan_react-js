@@ -1,5 +1,6 @@
 import { Component } from "react";
 import axios from "axios";
+import "./App.css";
 
 class Login extends Component {
 
@@ -19,13 +20,13 @@ class Login extends Component {
         data
       );
 
-      // 🔥 simpan token
-      localStorage.setItem("token", res.data.token);
+      const token = res.data.data.token;
+
+      localStorage.setItem("token", token);
 
       alert("Login berhasil");
 
-      // bebas mau ke mana
-      window.location.href = "/";
+      window.location.href = "/home";
 
     } catch (err) {
       console.log(err);
@@ -35,35 +36,38 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container mt-5">
-        <h2 className="text-primary">Login</h2>
+      <div className="auth-container">
+        <div className="card">
 
-        <form
-          className="p-4 bg-light rounded shadow"
-          onSubmit={this.handleSubmit}
-        >
-          <input
-            className="form-control mb-3"
-            type="email"
-            name="email"
-            placeholder="Email"
-          />
+          <h2 className="title">Login</h2>
 
-          <input
-            className="form-control mb-3"
-            type="password"
-            name="password"
-            placeholder="Password"
-          />
+          <form onSubmit={this.handleSubmit} className="form">
+            
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="input"
+            />
 
-          <button type="submit" className="btn btn-success m-2">
-            Login
-          </button>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="input"
+            />
 
-          <a href="register" className="btn btn-success m-2">
-            Register
-          </a>
-        </form>
+            <button type="submit" className="btn">
+              Login
+            </button>
+
+          </form>
+
+          <p className="link">
+            Belum punya akun? <a href="/register">Register</a>
+          </p>
+
+        </div>
       </div>
     );
   }
