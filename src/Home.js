@@ -22,7 +22,7 @@ class Home extends Component {
 
         {/* 🔥 NAVBAR */}
         <div className="navbar">
-          <h3 className="logo">My App</h3>
+          <h3 className="logo">Tabungan Digital</h3>
 
           <div className="nav-links">
             <Link to="user">User</Link>

@@ -96,7 +96,7 @@ body {
 
 /* ================= CONTENT ================= */
 .content {
-  max-width: 900px;
+  max-width: 600px;
   margin: 30px auto;
   padding: 20px;
 }
@@ -126,8 +126,26 @@ body {
 }
 
 .add-btn {
-  width: 100%;
-  margin-bottom: 15px;
+  display: block;
+  margin: 10px 0;
+  width: 120px;
+}
+
+.submit-btn {
+  width: 90px;
+  padding: 10px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.button-group {
+   display: flex;       
+  gap: 3px;          
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .btn:hover,

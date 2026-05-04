@@ -67,7 +67,7 @@ class Register extends Component {
           </form>
 
           <p className="link">
-            Belum punya akun? <a href="/login">Login</a>
+            Sudah punya akun? <a href="/login">Login</a>
           </p>
 
         </div>

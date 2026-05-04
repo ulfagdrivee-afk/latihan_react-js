@@ -9,7 +9,7 @@ class Categories extends Component {
   icon: "",
   type: "",
   editId: null,
-  showForm: false, // 🔥 ini penting
+  showForm: false, 
   errors: {},
 };
 
@@ -56,6 +56,8 @@ class Categories extends Component {
         { name, icon, type },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      alert("Create Categories Successful");
+
     }
 
     // ✅ reset setelah sukses
@@ -86,8 +88,30 @@ class Categories extends Component {
       icon: item.icon,
       type: item.type,
       editId: item.id,
+       showForm: true,
+    errors: {}, 
     });
   };
+
+  // 🔥 DELETE
+handleDelete = async (id) => {
+  const token = localStorage.getItem("token");
+
+  try {
+    await axios.delete(
+      `http://127.0.0.1:8000/api/categories/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    // refresh data setelah delete
+    this.getData();
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   render() {
     return (
@@ -134,7 +158,8 @@ class Categories extends Component {
 {this.state.errors.type && (
   <p className="error">{this.state.errors.type[0]}</p>
 )}
-    <button className="add-btn">
+    <div className="button-group">
+         <button className="submit-btn">
       {this.state.editId ? "Update" : "Simpan"}
     </button>
 
@@ -154,6 +179,7 @@ class Categories extends Component {
     >
       Batal
     </button>
+    </div>
   </form>
 )}
 

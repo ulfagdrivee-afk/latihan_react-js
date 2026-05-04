@@ -1,49 +1,229 @@
 import { Component } from "react";
-class Wallets extends Component  {
-    render() {
-        return (
-             <div className="container mt-5">
-                <div className="text-start">
-                      <button className="btn btn-success">Tambah Data</button>
-                </div>
-              
-                
-           <table className="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>user_id</th>
-                    <th>currency_id</th>
-                    <th>Nama</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>Bank</td>
-                
-                    <td>
-                        <button className="btn btn-warning m-2">Edit</button>
-                        <button className="btn btn-danger m-2">Hapus</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>Dompet</td>
-                   
-                    <td>
-                        <button className="btn btn-warning m-2">Edit</button>
-                        <button className="btn btn-danger m-2">Hapus</button>
-                    </td>
-                </tr>
-            </tbody>
+import axios from "axios";
+import "./App.css";
 
-           </table>
-            </div>
-        )
+class Wallets extends Component {
+  state = {
+    data: [],
+    currencies: [],
+    name: "",
+    user_id: "",
+    currency_id: "",
+    editId: null,
+    showForm: false,
+  };
+
+  componentDidMount() {
+    this.getData();
+    this.getCurrencies();
+    this.getUserLogin();
+  }
+
+  getUserLogin = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await axios.get("http://127.0.0.1:8000/api/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      this.setState({ user_id: res.data.id });
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  getData = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await axios.get("http://127.0.0.1:8000/api/wallets", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      this.setState({
+        data: res.data.data.wallets || [],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  getCurrencies = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await axios.get("http://127.0.0.1:8000/api/currencies", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      this.setState({
+        currencies: res.data.data.currencies || [],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const { name, user_id, currency_id, editId } = this.state;
+
+    try {
+      if (editId) {
+        await axios.put(
+          `http://127.0.0.1:8000/api/wallets/${editId}`,
+          { name, user_id, currency_id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        await axios.post(
+          "http://127.0.0.1:8000/api/wallets",
+          { name, user_id, currency_id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      this.setState({
+        name: "",
+        currency_id: "",
+        editId: null,
+        showForm: false,
+      });
+
+      this.getData();
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Gagal simpan data");
+    }
+  };
+
+  handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.delete(
+        `http://127.0.0.1:8000/api/wallets/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      this.getData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  handleEdit = (item) => {
+    this.setState({
+      name: item.name,
+      currency_id: item.currency_id,
+      editId: item.id,
+      showForm: true,
+    });
+  };
+
+  render() {
+    return (
+      <div className="container">
+
+        <button
+          className="btn"
+          onClick={() => this.setState({ showForm: true })}
+        >
+          + Tambah Data
+        </button>
+
+        {this.state.showForm && (
+          <form onSubmit={this.handleSubmit} className="form">
+
+            <input
+              name="name"
+              placeholder="Nama Wallet"
+              value={this.state.name}
+              onChange={this.handleChange}
+              className="input"
+            />
+
+            <select
+              name="currency_id"
+              value={this.state.currency_id}
+              onChange={this.handleChange}
+              className="input"
+            >
+              <option value="">Pilih Currency</option>
+              {this.state.currencies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.code}
+                </option>
+              ))}
+            </select>
+                
+            <div className="btn-group">
+              <button className="btn">
+                {this.state.editId ? "Update" : "Simpan"}
+              </button>
+
+              <button
+                type="button"
+                className="btn cancel"
+                onClick={() => this.setState({ showForm: false })}
+              >
+                Batal
+              </button>
+            </div>
+
+          </form>
+        )}
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>User</th>
+              <th>Currency</th>
+              <th>Nama</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {this.state.data.map((item, index) => (
+              <tr key={item.id}>
+                <td>{index + 1}</td>
+                <td>{item.user?.name}</td>
+                <td>{item.currency?.code}</td>
+                <td>{item.name}</td>
+                <td>
+                  <button
+                    className="btn edit"
+                    onClick={() => this.handleEdit(item)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="btn delete"
+                    onClick={() => this.handleDelete(item.id)}
+                  >
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+      </div>
+    );
+  }
 }
 
 export default Wallets;

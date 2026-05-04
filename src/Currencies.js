@@ -56,6 +56,7 @@ class Currencies extends Component {
         { name, symbol, code },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      alert("Create Currencies Successful");
     }
 
     this.setState({ name: "", symbol: "", code: "", editId: null });
@@ -83,6 +84,8 @@ class Currencies extends Component {
       symbol: item.symbol,
       code: item.code,
       editId: item.id,
+       showForm: true,
+    errors: {}, 
     });
   };
 
@@ -120,8 +123,8 @@ class Currencies extends Component {
       onChange={this.handleChange}
       className="input"
     />
-
-    <button className="add-btn">
+    <div className="button-group">
+         <button className="submit-btn">
       {this.state.editId ? "Update" : "Simpan"}
     </button>
 
@@ -136,11 +139,14 @@ class Currencies extends Component {
           symbol: "",
           code: "",
           editId: null,
+          
         })
       }
     >
       Batal
     </button>
+    </div>
+   
   </form>
 )}
 
