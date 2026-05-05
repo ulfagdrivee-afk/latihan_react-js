@@ -26,6 +26,8 @@ class Currencies extends Component {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+      // alert("Get All Currencies Successful");
+
 
     this.setState({ data: res.data.data.currencies });
   };
@@ -49,6 +51,8 @@ class Currencies extends Component {
         { name, symbol, code },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      alert("Update Mata Uang Sukses");
+
     } else {
       // CREATE
       await axios.post(
@@ -56,7 +60,7 @@ class Currencies extends Component {
         { name, symbol, code },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Create Currencies Successful");
+      alert("Membuat Mata Uang Sukses");
     }
 
     this.setState({ name: "", symbol: "", code: "", editId: null });
@@ -73,6 +77,8 @@ class Currencies extends Component {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+      alert("Hapus Mata Uang Sukses");
+
 
     this.getData();
   };

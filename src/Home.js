@@ -26,7 +26,7 @@ class Home extends Component {
 
           <div className="nav-links">
             <Link to="user">User</Link>
-            <Link to="currencies">Currencies</Link>
+            <Link to="currencies">Mata Uang</Link>
             <Link to="categories">Categories</Link>
             <Link to="wallets">Wallets</Link>
             <Link to="transactions">Transactions</Link>

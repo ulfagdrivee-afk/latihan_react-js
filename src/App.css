@@ -162,7 +162,9 @@ table {
 
 th, td {
   padding: 10px;
+ padding: 12px 16px;
   text-align: left;
+  
 }
 
 th {
@@ -172,6 +174,12 @@ th {
 
 td {
   border-bottom: 1px solid #eee;
+   white-space: nowrap;
+}
+td:last-child {
+  white-space: nowrap; 
+   display: flex;
+  gap: 5px;
 }
 
 /* biar tabel tidak rusak */
@@ -187,6 +195,7 @@ td {
   border-radius: 5px;
   color: white;
   cursor: pointer;
+   display: inline-block;
 }
 
 .edit {

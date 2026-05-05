@@ -19,6 +19,7 @@ class Wallets extends Component {
     this.getUserLogin();
   }
 
+  // 🔥 USER LOGIN
   getUserLogin = async () => {
     const token = localStorage.getItem("token");
 
@@ -33,6 +34,7 @@ class Wallets extends Component {
     }
   };
 
+  // 🔥 GET WALLET
   getData = async () => {
     const token = localStorage.getItem("token");
 
@@ -49,6 +51,7 @@ class Wallets extends Component {
     }
   };
 
+  // 🔥 GET CURRENCY
   getCurrencies = async () => {
     const token = localStorage.getItem("token");
 
@@ -65,10 +68,12 @@ class Wallets extends Component {
     }
   };
 
+  // 🔥 INPUT
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  // 🔥 SIMPAN / UPDATE
   handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,6 +109,7 @@ class Wallets extends Component {
     }
   };
 
+  // 🔥 DELETE
   handleDelete = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -121,6 +127,7 @@ class Wallets extends Component {
     }
   };
 
+  // 🔥 EDIT
   handleEdit = (item) => {
     this.setState({
       name: item.name,
@@ -134,13 +141,15 @@ class Wallets extends Component {
     return (
       <div className="container">
 
+        {/* BUTTON */}
         <button
-          className="btn"
+          className="add-btn"
           onClick={() => this.setState({ showForm: true })}
         >
           + Tambah Data
         </button>
 
+        {/* FORM */}
         {this.state.showForm && (
           <form onSubmit={this.handleSubmit} className="form">
 
@@ -152,6 +161,7 @@ class Wallets extends Component {
               className="input"
             />
 
+            {/* CURRENCY */}
             <select
               name="currency_id"
               value={this.state.currency_id}
@@ -165,9 +175,9 @@ class Wallets extends Component {
                 </option>
               ))}
             </select>
-                
-            <div className="btn-group">
-              <button className="btn">
+
+            <div className="button-group">
+              <button className="submit-btn">
                 {this.state.editId ? "Update" : "Simpan"}
               </button>
 
@@ -183,6 +193,7 @@ class Wallets extends Component {
           </form>
         )}
 
+        {/* TABLE */}
         <table className="table">
           <thead>
             <tr>
@@ -190,6 +201,7 @@ class Wallets extends Component {
               <th>User</th>
               <th>Currency</th>
               <th>Nama</th>
+              <th>Balance</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -198,27 +210,35 @@ class Wallets extends Component {
             {this.state.data.map((item, index) => (
               <tr key={item.id}>
                 <td>{index + 1}</td>
-                <td>{item.user?.name}</td>
-                <td>{item.currency?.code}</td>
-                <td>{item.name}</td>
-                <td>
-                  <button
-                    className="btn edit"
-                    onClick={() => this.handleEdit(item)}
-                  >
-                    Edit
-                  </button>
 
-                  <button
-                    className="btn delete"
-                    onClick={() => this.handleDelete(item.id)}
-                  >
-                    Hapus
-                  </button>
+                {/* 🔥 pakai user_id */}
+                <td>{item.user_id}</td>
+
+                {/* 🔥 pakai currency_code dari backend */}
+                <td>{item.currency_code}</td>
+
+                <td>{item.name}</td>
+                  <td>Rp {item.balance?.toLocaleString()}</td>
+
+                <td>
+                   <button
+                      className="action-btn edit"
+                      onClick={() => this.handleEdit(item)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="action-btn delete"
+                      onClick={() => this.handleDelete(item.id)}
+                    >
+                      Hapus
+                    </button>
                 </td>
               </tr>
             ))}
           </tbody>
+
         </table>
 
       </div>

@@ -39,6 +39,9 @@ class Categories extends Component {
   // 🔥 CREATE & UPDATE
  handleSubmit = async (e) => {
   e.preventDefault();
+   if (this.state.loading) return; 
+
+     this.setState({ loading: true });
 
   const token = localStorage.getItem("token");
   const { name, icon, type, editId } = this.state;
@@ -50,6 +53,8 @@ class Categories extends Component {
         { name, icon, type },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      alert("Update Categories Successful");
+
     } else {
       await axios.post(
         "http://127.0.0.1:8000/api/categories",
@@ -57,6 +62,7 @@ class Categories extends Component {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Create Categories Successful");
+
 
     }
 
@@ -159,10 +165,13 @@ handleDelete = async (id) => {
   <p className="error">{this.state.errors.type[0]}</p>
 )}
     <div className="button-group">
-         <button className="submit-btn">
-      {this.state.editId ? "Update" : "Simpan"}
-    </button>
-
+        <button className="submit-btn" disabled={this.state.loading}>
+  {this.state.loading
+    ? "Loading..."
+    : this.state.editId
+    ? "Update"
+    : "Simpan"}
+</button>
     {/* tombol batal */}
     <button
       type="button"
