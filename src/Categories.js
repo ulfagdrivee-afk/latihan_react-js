@@ -99,8 +99,7 @@ class Categories extends Component {
     });
   };
 
-  // 🔥 DELETE
-handleDelete = async (id) => {
+  handleDelete = async (id) => {
   const token = localStorage.getItem("token");
 
   try {
@@ -111,8 +110,10 @@ handleDelete = async (id) => {
       }
     );
 
-    // refresh data setelah delete
-    this.getData();
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
 
   } catch (err) {
     console.log(err);

@@ -67,21 +67,26 @@ class Currencies extends Component {
     this.getData();
   };
 
-  // 🔥 DELETE
   handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
+  try {
     await axios.delete(
       `http://127.0.0.1:8000/api/currencies/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-      alert("Hapus Mata Uang Sukses");
 
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
 
-    this.getData();
-  };
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // 🔥 EDIT (ISI FORM)
   handleEdit = (item) => {

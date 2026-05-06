@@ -143,28 +143,31 @@ getCategories = async () => {
 
       this.getData();
     } catch (err) {
-      console.log(err.response?.data);
-      alert("Gagal simpan data");
-    }
+  console.log("ERROR:", err.response?.data);
+  alert(JSON.stringify(err.response?.data));
+}
   };
 
-  // 🔥 DELETE
-  handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
+ handleDelete = async (id) => {
+  const token = localStorage.getItem("token");
 
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/transactions/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  try {
+    await axios.delete(
+      `http://127.0.0.1:8000/api/transactions/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-      this.getData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // 🔥 EDIT
   handleEdit = (item) => {
