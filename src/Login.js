@@ -11,18 +11,29 @@ class Login extends Component {
       password : form.password.value,
     };
     try{
-      const rest = await axios.post("http://127.0.0.1:8000/api/auth/login", data);
+  const res = await axios.post(
+    "http://127.0.0.1:8000/api/auth/login",
+    data
+  );
 
-      const token = rest.data.data.token;
+  const token = res.data.data.token;
+  const role = res.data.data.role;
 
-      localStorage.setItem("token",token);
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
 
-      alert("Login Berhasil");
-      window.location.href="/home";
-    } catch(err){
-      console.log(err);
-      alert("Login Gagal");
-    }
+  alert("Login Berhasil");
+
+  if (role === "admin") {
+    window.location.href = "/home";
+  } else {
+    window.location.href = "/home";
+  }
+
+} catch(err){
+  console.log(err);
+  alert("Login Gagal");
+}
   };
 
   render() {
@@ -34,9 +45,10 @@ class Login extends Component {
             <input type="email" name="email" placeholder="Email" className="input"/>
             <input type="password" name="password" placeholder="Password"className="input"/>
             <button type="submit" className="btn">Login</button>
-          </form>
-          <p className="link">Belum Punya Akun <a href="/register">Register</a></p>
+              <p className="link">Belum Punya Akun <a href="/register">Register</a></p>
           
+          </form>
+        
         </div>
       </div>
     )

@@ -10,6 +10,7 @@ class Register extends Component {
       'name' : form.name.value,
       'email' : form.email.value,
       'password' : form.password.value,
+      role: form.role.value,
     };
     try {
       await axios.post("http://127.0.0.1:8000/api/auth/register", data);
@@ -30,6 +31,11 @@ class Register extends Component {
             <input type="text" name="name" placeholder="Name" className="input"/>
             <input type="email" name="email" placeholder="Email" className="input"/>
             <input type="password" name="password" placeholder="Password" className="input"/>
+            <select name="role" className="input">
+  <option value="">Pilih Role</option>
+  <option value="admin">Admin</option>
+  <option value="petugas">Petugas</option>
+</select>
             <button type="submit" className="btn">Register</button>
           </form>
           <p className="link">Sudah Punya Akun <a href="/login">Login</a></p>

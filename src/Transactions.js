@@ -79,23 +79,6 @@ getCategories = async () => {
     }
   };
 
-//   // 🔥 GET CURRENCY
-//   getCurrencies = async () => {
-//     const token = localStorage.getItem("token");
-
-//     try {
-//       const res = await axios.get("http://127.0.0.1:8000/api/currencies", {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       this.setState({
-//         currencies: res.data.data.currencies || [],
-//       });
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
   // 🔥 INPUT
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
@@ -123,16 +106,6 @@ getCategories = async () => {
         );
       }
 
-      // this.setState({
-      //   name: "",
-      //   category_id: "",
-      //   wallet_id: "",
-      //   amount: "",
-      //   date: "",
-      //   note: "",
-      //   editId: null,
-      //   showForm: false,
-      // });
       console.log({
   category_id,
   wallet_id,
@@ -143,28 +116,31 @@ getCategories = async () => {
 
       this.getData();
     } catch (err) {
-      console.log(err.response?.data);
-      alert("Gagal simpan data");
-    }
+  console.log("ERROR:", err.response?.data);
+  alert(JSON.stringify(err.response?.data));
+}
   };
 
-  // 🔥 DELETE
-  handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
+ handleDelete = async (id) => {
+  const token = localStorage.getItem("token");
 
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/transactions/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  try {
+    await axios.delete(
+      `http://127.0.0.1:8000/api/transactions/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-      this.getData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // 🔥 EDIT
   handleEdit = (item) => {
@@ -181,21 +157,21 @@ getCategories = async () => {
   };
 
   render() {
+      const role = localStorage.getItem("role");
+
     return (
       <div className="container">
 
-        {/* BUTTON */}
-        <button
-          className="add-btn"
-          onClick={() => this.setState({ showForm: true })}
-        >
-          + Tambah Data
-        </button>
-
-        {/* FORM */}
-        {this.state.showForm && (
+           {role === "admin" && (
+  <button
+    className="add-btn"
+    onClick={() => this.setState({ showForm: true })}
+  >
+    + Tambah Data
+  </button>
+)}
+    {role === "admin" && this.state.showForm && (
           <form onSubmit={this.handleSubmit} className="form">
-
 
             <select
               name="category_id"
@@ -250,8 +226,6 @@ getCategories = async () => {
               className="input"
             />
 
-            
-
             <div className="button-group">
               <button className="submit-btn">
                 {this.state.editId ? "Update" : "Simpan"}
@@ -288,8 +262,6 @@ getCategories = async () => {
               <tr key={item.id}>
                 <td>{index + 1}</td>
 
-                
-
                 {/* 🔥 pakai currency_code dari backend */}
                 <td>{item.category_name}</td>
                 <td>{item.wallet_name}</td>
@@ -298,21 +270,25 @@ getCategories = async () => {
                 <td>{item.date}</td>
                 <td>{item.note}</td>
 
-                <td>
-                   <button
-                      className="action-btn edit"
-                      onClick={() => this.handleEdit(item)}
-                    >
-                      Edit
-                    </button>
+              <td>
+  {role === "admin" && (
+    <>
+      <button
+        className="action-btn edit"
+        onClick={() => this.handleEdit(item)}
+      >
+        Edit
+      </button>
 
-                    <button
-                      className="action-btn delete"
-                      onClick={() => this.handleDelete(item.id)}
-                    >
-                      Hapus
-                    </button>
-                </td>
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
+    </>
+  )}
+</td>  
               </tr>
             ))}
           </tbody>

@@ -99,8 +99,7 @@ class Categories extends Component {
     });
   };
 
-  // 🔥 DELETE
-handleDelete = async (id) => {
+  handleDelete = async (id) => {
   const token = localStorage.getItem("token");
 
   try {
@@ -111,8 +110,10 @@ handleDelete = async (id) => {
       }
     );
 
-    // refresh data setelah delete
-    this.getData();
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
 
   } catch (err) {
     console.log(err);
@@ -120,15 +121,19 @@ handleDelete = async (id) => {
 };
 
   render() {
+      const role = localStorage.getItem("role");
+
     return (
       <div className="content">
-        <button
-  className="add-btn"
-  onClick={() => this.setState({ showForm: true, editId: null })}
->
-  Tambah Data
-</button>
-     {this.state.showForm && (
+           {role === "admin" && (
+  <button
+    className="add-btn"
+    onClick={() => this.setState({ showForm: true })}
+  >
+    + Tambah Data
+  </button>
+)}
+    {role === "admin" && this.state.showForm && (
   <form onSubmit={this.handleSubmit}>
     <input
       name="name"
@@ -213,20 +218,24 @@ handleDelete = async (id) => {
                   <td>{item.icon}</td>
                   <td>{item.type}</td>
                   <td>
-                    <button
-                      className="action-btn edit"
-                      onClick={() => this.handleEdit(item)}
-                    >
-                      Edit
-                    </button>
+  {role === "admin" && (
+    <>
+      <button
+        className="action-btn edit"
+        onClick={() => this.handleEdit(item)}
+      >
+        Edit
+      </button>
 
-                    <button
-                      className="action-btn delete"
-                      onClick={() => this.handleDelete(item.id)}
-                    >
-                      Hapus
-                    </button>
-                  </td>
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
+    </>
+  )}
+</td>  
                 </tr>
               ))}
             </tbody>

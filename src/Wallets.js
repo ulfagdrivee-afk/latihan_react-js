@@ -109,23 +109,26 @@ class Wallets extends Component {
     }
   };
 
-  // 🔥 DELETE
   handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/wallets/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  try {
+    await axios.delete(
+      `http://127.0.0.1:8000/api/wallets/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
-      this.getData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // 🔥 EDIT
   handleEdit = (item) => {
@@ -138,19 +141,20 @@ class Wallets extends Component {
   };
 
   render() {
+      const role = localStorage.getItem("role");
+
     return (
       <div className="container">
 
-        {/* BUTTON */}
-        <button
-          className="add-btn"
-          onClick={() => this.setState({ showForm: true })}
-        >
-          + Tambah Data
-        </button>
-
-        {/* FORM */}
-        {this.state.showForm && (
+            {role === "admin" && (
+  <button
+    className="add-btn"
+    onClick={() => this.setState({ showForm: true })}
+  >
+    + Tambah Data
+  </button>
+)}
+    {role === "admin" && this.state.showForm && (
           <form onSubmit={this.handleSubmit} className="form">
 
             <input
@@ -220,21 +224,25 @@ class Wallets extends Component {
                 <td>{item.name}</td>
                   <td>Rp {item.balance?.toLocaleString()}</td>
 
-                <td>
-                   <button
-                      className="action-btn edit"
-                      onClick={() => this.handleEdit(item)}
-                    >
-                      Edit
-                    </button>
+            <td>
+  {role === "admin" && (
+    <>
+      <button
+        className="action-btn edit"
+        onClick={() => this.handleEdit(item)}
+      >
+        Edit
+      </button>
 
-                    <button
-                      className="action-btn delete"
-                      onClick={() => this.handleDelete(item.id)}
-                    >
-                      Hapus
-                    </button>
-                </td>
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
+    </>
+  )}
+</td>  
               </tr>
             ))}
           </tbody>

@@ -3,13 +3,13 @@ import axios from "axios";
 import "./App.css";
 
 class Currencies extends Component {
- state = {
+state = {
   data: [],
   name: "",
   symbol: "",
   code: "",
   editId: null,
-  showForm: false, // 🔥 ini penting
+  showForm: false,
 };
 
   componentDidMount() {
@@ -23,11 +23,9 @@ class Currencies extends Component {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/currencies",
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers : { Authorization: `Bearer ${token}` },
       }
     );
-      // alert("Get All Currencies Successful");
-
 
     this.setState({ data: res.data.data.currencies });
   };
@@ -67,21 +65,26 @@ class Currencies extends Component {
     this.getData();
   };
 
-  // 🔥 DELETE
   handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
+  try {
     await axios.delete(
       `http://127.0.0.1:8000/api/currencies/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-      alert("Hapus Mata Uang Sukses");
 
+    // ⚡ langsung hapus dari state (tanpa reload API)
+    this.setState({
+      data: this.state.data.filter((item) => item.id !== id),
+    });
 
-    this.getData();
-  };
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // 🔥 EDIT (ISI FORM)
   handleEdit = (item) => {
@@ -96,15 +99,18 @@ class Currencies extends Component {
   };
 
   render() {
+      const role = localStorage.getItem("role");
     return (
       <div className="content">
-        <button
-  className="add-btn"
-  onClick={() => this.setState({ showForm: true, editId: null })}
->
-  Tambah Data
-</button>
-     {this.state.showForm && (
+     {role === "admin" && (
+  <button
+    className="add-btn"
+    onClick={() => this.setState({ showForm: true })}
+  >
+    + Tambah Data
+  </button>
+)}
+    {role === "admin" && this.state.showForm && (
   <form onSubmit={this.handleSubmit}>
     <input
       name="name"
@@ -177,20 +183,25 @@ class Currencies extends Component {
                   <td>{item.symbol}</td>
                   <td>{item.code}</td>
                   <td>
-                    <button
-                      className="action-btn edit"
-                      onClick={() => this.handleEdit(item)}
-                    >
-                      Edit
-                    </button>
+                   <td>
+  {role === "admin" && (
+    <>
+      <button
+        className="action-btn edit"
+        onClick={() => this.handleEdit(item)}
+      >
+        Edit
+      </button>
 
-                    <button
-                      className="action-btn delete"
-                      onClick={() => this.handleDelete(item.id)}
-                    >
-                      Hapus
-                    </button>
-                  </td>
+      <button
+        className="action-btn delete"
+        onClick={() => this.handleDelete(item.id)}
+      >
+        Hapus
+      </button>
+    </>
+  )}
+</td>                  </td>
                 </tr>
               ))}
             </tbody>
